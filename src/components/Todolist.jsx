@@ -72,23 +72,19 @@ const Todolist = () => {
         Add
       </button>
       <ul className="list-disc pl-5 space-y-2">
-        {arr.map((item) => (
-          <li
-            key={item.id}
-            className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
-          >
-            {editingItem === item.id ? (
-              <input
-                className="input input-bordered flex-grow p-2 border rounded-md shadow-sm mr-2"
-                type="text"
-                value={editInput}
-                onChange={handleEditChange}
-              />
-            ) : (
-              item.title
-            )}
-            {editingItem === item.id ? (
-              <>
+        {arr.map((item) => {
+          if (editingItem === item.id) {
+            return (
+              <li
+                key={item.id}
+                className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
+              >
+                <input
+                  className="input input-bordered flex-grow p-2 border rounded-md shadow-sm mr-2"
+                  type="text"
+                  value={editInput}
+                  onChange={handleEditChange}
+                />
                 <button
                   onClick={() => handleSaveEdit(item.id)}
                   className="btn btn-success py-1 px-2 text-green-600 hover:bg-green-100 rounded-lg"
@@ -101,25 +97,33 @@ const Todolist = () => {
                 >
                   Cancel
                 </button>
-              </>
-            ) : (
-              <div>
-                <button
-                  onClick={() => handleClickEdit(item)}
-                  className="btn btn-warning py-1 px-2 text-yellow-600 hover:bg-yellow-100 rounded-lg"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleClickDelete(item.id)}
-                  className="btn btn-error py-1 px-2 text-red-600 hover:bg-red-100 rounded-lg ml-2"
-                >
-                  Del
-                </button>
-              </div>
-            )}
-          </li>
-        ))}
+              </li>
+            );
+          } else {
+            return (
+              <li
+                key={item.id}
+                className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
+              >
+                {item.title}
+                <div>
+                  <button
+                    onClick={() => handleClickEdit(item)}
+                    className="btn btn-warning py-1 px-2 text-yellow-600 hover:bg-yellow-100 rounded-lg"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleClickDelete(item.id)}
+                    className="btn btn-error py-1 px-2 text-red-600 hover:bg-red-100 rounded-lg ml-2"
+                  >
+                    Del
+                  </button>
+                </div>
+              </li>
+            );
+          }
+        })}
       </ul>
     </div>
   );
