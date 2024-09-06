@@ -3,15 +3,18 @@ import useStore from "../datastore/datastore";
 import { toast } from "react-toastify";
 
 const Todolist = () => {
-  const { arr, addArr, deleteArr, editArr } = useStore((state) => ({
-    arr: state.arr,
-    addArr: state.addArr,
-    deleteArr: state.deleteArr,
-    editArr: state.editArr,
-  }));
+  const { arr, addArr, deleteArr, editArr, updateStatus } = useStore(
+    (state) => ({
+      arr: state.arr,
+      addArr: state.addArr,
+      deleteArr: state.deleteArr,
+      editArr: state.editArr,
+      updateStatus: state.updateStatus,
+    })
+  );
 
   const [input1, setInput1] = useState("");
-  const [editingItem, setEditingItem] = useState(null);
+  const [editingItem, setEditingItem] = useState("");
   const [editInput, setEditInput] = useState("");
 
   const handleClickAdd = () => {
@@ -48,9 +51,13 @@ const Todolist = () => {
       return;
     }
     editArr(id, editInput);
-    setEditingItem(null);
+    setEditingItem("");
     setEditInput("");
     toast.success("Item updated successfully");
+  };
+
+  const handleClick2 = (status, id) => {
+    updateStatus(!status, id);
   };
 
   return (
@@ -71,11 +78,11 @@ const Todolist = () => {
       >
         Add
       </button>
-      <ul className="list-disc pl-5 space-y-2">
+      <div className="list-disc pl-5 space-y-2">
         {arr.map((item) => {
           if (editingItem === item.id) {
             return (
-              <li
+              <div
                 key={item.id}
                 className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
               >
@@ -93,26 +100,32 @@ const Todolist = () => {
                 </button>
                 <button
                   onClick={() => setEditingItem(null)}
-                  className="btn btn-error py-1 px-2 text-red-600 hover:bg-red-100 rounded-lg ml-2"
+                  className={`btn btn-error py-1 px-2 text-red-600 hover:bg-red-100 rounded-lg ml-2`}
                 >
                   Cancel
                 </button>
-              </li>
+              </div>
             );
           } else {
             return (
-              <li
+              <div
+                onClick={() => handleClick2(item.status, item.id)}
                 key={item.id}
-                className="flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm"
+                className={`flex justify-between items-center bg-gray-100 p-3 rounded-md shadow-sm ${
+                  item.status ? "line-through" : ""
+                }`}
               >
                 {item.title}
                 <div>
-                  <button
-                    onClick={() => handleClickEdit(item)}
-                    className="btn btn-warning py-1 px-2 text-yellow-600 hover:bg-yellow-100 rounded-lg"
-                  >
-                    Edit
-                  </button>
+                  {item.status ? null : (
+                    <button
+                      onClick={() => handleClickEdit(item)}
+                      className="btn btn-warning py-1 px-2 text-yellow-600 hover:bg-yellow-100 rounded-lg"
+                    >
+                      Edit
+                    </button>
+                  )}
+
                   <button
                     onClick={() => handleClickDelete(item.id)}
                     className="btn btn-error py-1 px-2 text-red-600 hover:bg-red-100 rounded-lg ml-2"
@@ -120,11 +133,11 @@ const Todolist = () => {
                     Del
                   </button>
                 </div>
-              </li>
+              </div>
             );
           }
         })}
-      </ul>
+      </div>
     </div>
   );
 };

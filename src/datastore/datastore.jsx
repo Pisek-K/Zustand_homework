@@ -4,10 +4,10 @@ import React from "react";
 import { create } from "zustand";
 
 const dataStore = (set) => ({
-  arr: [{ id: 1, title: "best" }],
+  arr: [{ id: 1, title: "best" ,status:true}],
   addArr: (newValue) =>
     set((state) => ({
-      arr: [...state.arr, { id: Date.now(), title: newValue }],
+      arr: [...state.arr, { id: Date.now(), title: newValue,status:false }],
     })),
   deleteArr: (id) =>
     set((state) => ({
@@ -19,12 +19,18 @@ const dataStore = (set) => ({
         item.id === id ? { ...item, title: newValue } : item
       ),
     })),
+    updateStatus: (status, id) =>
+      set((state) => ({
+        arr: state.arr.map((item) =>
+          item.id === id ? { ...item, status } : item
+        ),
+      })),
 });
 
 const usePersist = {
   name: "data-store",
   getStorage: () => localStorage,
-  paratialize: (state) => ({
+  partialize: (state) => ({
     arr: state.arr,
   }),
 };
